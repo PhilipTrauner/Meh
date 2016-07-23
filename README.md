@@ -1,9 +1,13 @@
 # Meh
 
-![](http://content.philip-trauner.me/meh.png)
+![Meh Banner](http://content.philip-trauner.me/meh.png)
+
+![Python version support: 2.7, 3.4, 3.5](https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5-blue.svg)
+![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+![Status: Shrug](https://img.shields.io/badge/status-%C2%AF%5C__(%E3%83%84)__%2F%C2%AF-green.svg)
 
 ***Meh*** is a **Python configuration utility**. I know there are already quite a few good ones out there but trust me, ***Meh*** is different.
-Instead of relying on some kind of **data format** like JSON it uses something which I can't believe nobody has thought of yet: **Python**. 
+Instead of relying on some kind of **data format** like JSON it uses something which I can't believe nobody has thought of yet: **Python**.
 
 
 ## Usage
@@ -11,9 +15,9 @@ Instead of relying on some kind of **data format** like JSON it uses something w
 from Meh import Config, Option
 
 config = Config()
-config.add(Option("food", ["Steak", "Pizza", "Burgers"], 
+config.add(Option("food", ["Steak", "Pizza", "Burgers"],
 	validator=lambda x: type(x) is list))
-config.add(Option("ages", {"@snoato" : 18, "@PhilipTrauner" : 16}, 
+config.add(Option("ages", {"@snoato" : 18, "@PhilipTrauner" : 16},
 	validator=lambda x: type(x) is dict))
 config.add(Option("bytestring", b"test"))
 config += Option("another_number", 42.0, comment="hihi")
@@ -40,7 +44,7 @@ print(config.food)
 **Outputs**:
 
 ```
-['Baked Beans', 'Ramen']
+['Steak', 'Pizza', 'Burgers']
 {'@PhilipTrauner': 16, '@snoato': 18}
 test
 42.0
@@ -66,3 +70,13 @@ another_number = 42.0 # hihi
 
 * `validator`: Provide a function accepting one parameter which checks if a value is correct (returns a boolean).
 * `comment`: A comment appended to the variable declaration in the config file itself.
+
+## Installation
+```bash
+git clone https://github.com/PhilipTrauner/Meh
+cd Meh
+python setup.py install
+```
+
+## To-Do
+* **pip release** happening **soon**™
