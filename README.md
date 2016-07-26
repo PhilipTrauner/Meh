@@ -72,11 +72,14 @@ another_number = 42.0 # hihi
 * `comment`: A comment appended to the variable declaration in the config file itself.
 
 ## Installation
+**Manual:**
 ```bash
 git clone https://github.com/PhilipTrauner/Meh
 cd Meh
 python setup.py install
 ```
 
-## To-Do
-* **pip release** happening **soon**™
+**pip:**
+```bash
+pip install meh
+```
