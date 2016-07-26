@@ -1,12 +1,10 @@
 import unittest
+from sys import path
+from os.path import abspath
 
-try:
-	from Meh import validate_value
-except ImportError:
-	from sys import path
-	from os.path import abspath
-	path.append(abspath(".."))
-	from Meh import validate_value
+path.append(abspath("."))
+
+from Meh import validate_value
 
 
 class ValuesTestCases(unittest.TestCase):
