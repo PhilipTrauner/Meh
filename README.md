@@ -12,7 +12,7 @@ Instead of relying on some kind of **data format** like JSON it uses something w
 
 ## Usage
 ```python
-from Meh import Config, Option
+from Meh import Config, Option, ExceptionInConfigError
 
 config = Config()
 config.add(Option("food", ["Steak", "Pizza", "Burgers"],
@@ -28,7 +28,7 @@ CONFIG_PATH = "awesome_config.cfg"
 
 try:
 	config = config.load(CONFIG_PATH)
-except IOError:
+except (IOError, ExceptionInConfigError):
 	config.dump(CONFIG_PATH)
 	config = config.load(CONFIG_PATH)
 
@@ -83,3 +83,9 @@ python setup.py install
 ```bash
 pip install meh
 ```
+
+## Honorable Mentions
+* [@snoato](https://github.com/snoato) for stuff
+
+## To-Do
+* More test cases
