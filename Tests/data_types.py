@@ -2,14 +2,13 @@ from os import remove
 from os.path import isfile
 from sys import path
 from os.path import abspath
+from sys import argv
 
 path.append(abspath("."))
-from Meh import Config, Option, UnsupportedDataTypeError
+
+from Meh import Config, Option, UnsupportedTypeError, ExceptionInConfigError
 
 CONFIG_PATH = "data_types.cfg"
-
-if isfile(CONFIG_PATH):
-	remove(CONFIG_PATH)
 
 config = Config()
 config.add(Option("list", [1, 2, 3]))
@@ -24,7 +23,7 @@ config.add(Option("boolean", False))
 
 try:
 	config = config.load(CONFIG_PATH)
-except IOError:
+except (IOError, ExceptionInConfigError):
 	config.dump(CONFIG_PATH)
 	config = config.load(CONFIG_PATH)
 
@@ -50,23 +49,24 @@ config.boolean = True
 
 try:
 	config.list = [1, 2, 3, [lambda x: True]]
-except UnsupportedDataTypeError:
+except UnsupportedTypeError:
 	print("Value validatation succeeded for list")
 
 try:
 	config.tuple = ("1", "2", (lambda x: True, ))
-except UnsupportedDataTypeError:
+except UnsupportedTypeError:
 	print("Value validatation succeeded for tuple")
 
 try:
 	config.dict = {"foo" : lambda x: True, "test" : 124.0, "foo1" : "bar"}
-except UnsupportedDataTypeError:
+except UnsupportedTypeError:
 	print("Value validatation succeeded for dict")
 
 print("File contents:")
 print(config._dumps())
 
-remove(CONFIG_PATH)
-if isfile(CONFIG_PATH + "c"):
-	remove(CONFIG_PATH + "c")
+if not (len(argv) == 2 and argv[1] == "keep"):
+	remove(CONFIG_PATH)
+	if isfile(CONFIG_PATH + "c"):
+		remove(CONFIG_PATH + "c")
 	
