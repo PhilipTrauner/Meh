@@ -2,7 +2,6 @@ from imp import load_source
 from os.path import isfile
 from sys import version
 
-
 class OptionDuplicateError(IndexError):
 	def __init__(self, name):
 		super(IndexError, self).__init__("'%s' already exists" % name)	
@@ -22,62 +21,103 @@ class ValidationError(Exception):
 	def __init__(self, option):
 		super(Exception, self).__init__("invalid value for option '%s'" % option)
 
+class UnsupportedDataTypeError(TypeError):
+	def __init__(self):
+		super(TypeError, self).__init__("only list, tuple, dict, bytes, "
+			"str, float, complex, int and bool are supported (same " 
+			"thing applies to list, dict and tuple contents)")	
+
+def validate_value(value):
+	type_value = type(value)
+	if type_value in (list, tuple):
+		for element in value:
+			if not validate_value(element):
+				return False
+	elif type_value is dict:
+		return validate_value(tuple(value.keys())) and validate_value(tuple(value.values()))
+	elif type_value in (bytes, str, float, complex, int, bool):
+		return True
+	else:
+		return False
+	return True
 
 def make_value(value):
-	if type(value) is str:
-		value = '"%s"' % value
-	elif type(value) in (list, tuple, dict):
-		value = str(value)
-	return value
+	if validate_value(value):
+		if type(value) is str:
+			value = '"%s"' % value
+		elif type(value) in (list, tuple, dict):
+			value = str(value)
+		return value
+	else:
+		raise UnsupportedDataTypeError()
 
 
-class EditableConfig:
+class _EditableConfig:
+	"""
+	Automatically created proxy class.
+
+	HINTS: 
+	_values: All options with their respective values
+	_options: All Option instances that were originally added to 
+		the Config instance
+	_file: Path to the config file
+	_validation_failed: Optional function that's called on a validation error
+	_debug: Debug mode on/off (obviously)
+	"""
 	def __init__(self, values, options, file, validation_failed=None, debug=False):
-		self.values = values
-		self.options = options
-		self.file = file
-		self.validation_failed = validation_failed
-		self.debug = debug
+		self._values = values
+		self._options = options
+		self._file = file
+		self._validation_failed = validation_failed
+		self._debug = debug
 
 
 	def __getattr__(self, name):
-		if name in self.values:
-			return self.values[name]
+		if name in self._values:
+			return self._values[name]
 		else:
 			raise AttributeError("config no attribute '%s'" % name)
 
 
 	def __setattr__(self, name, value):
-		if name == "values" or name not in self.values:
+		if name == "_values" or name not in self._values:
 			self.__dict__[name] = value
 		else:
 			dump_required = False
-			for option in self.options:
+			for option in self._options:
 				if option.name == name:
-					if option.validator != None:
-						if option.validator(value):
-							self.values[name] = value
-							dump_required = True
-						else:
-							if self.validation_failed != None:
-								self.validation_failed(option.name, value)
+					if validate_value(value):
+						if option.validator != None:
+							if option.validator(value):
+								self._values[name] = value
+								dump_required = True
 							else:
-								raise ValidationError(option.name)
+								if self._validation_failed != None:
+									self._validation_failed(option.name, value)
+								else:
+									raise ValidationError(option.name)
+						else:
+							self._values[name] = value
+							dump_required = True
 					else:
-						self.values[name] = value
-						dump_required = True
+						raise UnsupportedDataTypeError()
 			if dump_required:
-				if self.debug: print("Rewriting config because the value of '%s' changed." % name)
-				open(self.file, "w").write(self.dumps())
+				if self._debug: 
+					print("Rewriting config because the value of '%s' changed." % name)
+				open(self._file, "w").write(self._dumps())
 
 
-	def dumps(self):
+	def _dumps(self):
 		out = ""
-		for option in self.options:
-			value = make_value(self.values[option.name])
+		for option in self._options:
+			value = make_value(self._values[option.name])
 			out += "%s = %s%s\n" % (option.name, value, 
 				(" # %s" % option.comment) if option.comment else "")
-		return out	
+		return out.rstrip("\n")
+
+
+	def __repr__(self):
+		return self._dumps()
 
 
 class Option:
@@ -196,7 +236,7 @@ class Config:
 						values[option.name] = value
 				if option_missing:
 					self.dump(file)
-			return EditableConfig(values, self.options, file, 
+			return _EditableConfig(values, self.options, file, 
 				validation_failed=self.validation_failed, debug=self.debug)
 		else:
 			error = "'%s' not found" % file
@@ -265,7 +305,7 @@ class Config:
 			value = make_value(option.default_value)
 			out += "%s = %s%s\n" % (option.name, value, 
 				(" # %s" % option.comment) if option.comment else "")
-		return out	
+		return out.rstrip("\n")
 
 
 	def __repr__(self):
