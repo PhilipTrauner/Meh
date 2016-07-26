@@ -20,12 +20,12 @@ setup(
 	description="Python configuration files in Python.",
 	long_description=read_md("README.md"),
 	classifiers=[
-		"Development Status :: 4 - Beta",
+		"Development Status :: 5 - Production/Stable",
 		"Programming Language :: Python :: 2.7",
 		"Programming Language :: Python :: 3.4",
 		"Programming Language :: Python :: 3.5",
 		"Intended Audience :: Developers",
 		"License :: OSI Approved :: MIT License",
 	],
-	keywords="config cfg meh py json"
+	keywords=["config", "cfg", "meh", "py", "json"]
 )
