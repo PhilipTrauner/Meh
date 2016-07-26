@@ -21,11 +21,24 @@ class ValidationError(Exception):
 	def __init__(self, option):
 		super(Exception, self).__init__("invalid value for option '%s'" % option)
 
-class UnsupportedDataTypeError(TypeError):
+
+class UnsupportedTypeError(TypeError):
 	def __init__(self):
 		super(TypeError, self).__init__("only list, tuple, dict, bytes, "
 			"str, float, complex, int and bool are supported (same " 
 			"thing applies to list, dict and tuple contents)")	
+
+
+class ExceptionInConfigError(Exception):
+	"""
+	Raised if an exception occurs while importing a config file.
+
+	IN: error (hint: error that occured on import)
+	"""
+	def __init__(self, error):
+		self.error = error
+		super(Exception, self).__init__("error occured during config import (%s)" % 
+			error.__class__.__name__)
 
 def validate_value(value):
 	type_value = type(value)
@@ -49,7 +62,7 @@ def make_value(value):
 			value = str(value)
 		return value
 	else:
-		raise UnsupportedDataTypeError()
+		raise UnsupportedTypeError()
 
 
 class _EditableConfig:
@@ -100,7 +113,7 @@ class _EditableConfig:
 							self._values[name] = value
 							dump_required = True
 					else:
-						raise UnsupportedDataTypeError()
+						raise UnsupportedTypeError()
 			if dump_required:
 				if self._debug: 
 					print("Rewriting config because the value of '%s' changed." % name)
@@ -206,7 +219,10 @@ class Config:
 		IN: file (type: str, hint: should be a valid path)
 		"""
 		if isfile(file):
-			config = load_source("config", file)
+			try:
+				config = load_source("config", file)
+			except Exception as e:
+				raise ExceptionInConfigError(e)
 			option_missing = False
 			values = {}
 			for option in self.options:
