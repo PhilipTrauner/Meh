@@ -1,9 +1,4 @@
 import unittest
-from sys import path
-from os.path import abspath
-
-path.append(abspath("."))
-
 from Meh import validate_value
 
 
