@@ -6,9 +6,7 @@
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Status: Shrug](https://img.shields.io/badge/status-%C2%AF%5C__(%E3%83%84)__%2F%C2%AF-green.svg)
 
-***Meh*** is a **Python configuration utility**. I know there are already quite a few good ones out there but trust me, ***Meh*** is different.
-Instead of relying on some kind of **data format** like JSON it uses something which I can't believe nobody has thought of yet: **Python**.
-
+***Meh*** is a **Python configuration utility** that uses **Python** as it's **data format**. It provides a pleasant and very "pythonic" interface to do all the things a configuration utility does, like default values, validators and comments.  
 
 ## Usage
 ```python
