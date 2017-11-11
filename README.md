@@ -4,13 +4,12 @@
 
 ![Python version support: 2.7, 3.4, 3.5](https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5-blue.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
-![Status: Shrug](https://img.shields.io/badge/status-%C2%AF%5C__(%E3%83%84)__%2F%C2%AF-green.svg)
 
 ***Meh*** is a **Python configuration utility** that uses **Python** as it's **data format**. It provides a pleasant and very "pythonic" interface to do all the things a configuration utility does, like default values, validators and comments.  
 
 ## Usage
 ```python
-from Meh import Config, Option, ExceptionInConfigError
+from meh import Config, Option, ExceptionInConfigError
 
 config = Config()
 config.add(Option("food", ["Steak", "Pizza", "Burgers"],
