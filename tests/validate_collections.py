@@ -1,5 +1,5 @@
 import unittest
-from Meh import validate_value
+from meh import validate_value
 
 
 class ValuesTestCases(unittest.TestCase):

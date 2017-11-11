@@ -6,7 +6,7 @@ from sys import argv
 
 path.append(abspath("."))
 
-from Meh import Config, Option, UnsupportedTypeError, ExceptionInConfigError
+from meh import Config, Option, UnsupportedTypeError, ExceptionInConfigError
 
 CONFIG_PATH = "data_types.cfg"
 

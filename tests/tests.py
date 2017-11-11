@@ -1,5 +1,5 @@
 import unittest
-from Tests.validate_collections import ValuesTestCases
+from tests.validate_collections import ValuesTestCases
 
 def tests():	
 	validate_collections_suite = unittest.TestLoader().loadTestsFromTestCase(
