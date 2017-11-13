@@ -20,6 +20,7 @@ config.add(Option("float", 42.0))
 config.add(Option("complex", (1+2j)))
 config.add(Option("int", 42))
 config.add(Option("boolean", False))
+config.add(Option("none", None))
 
 try:
 	config = config.load(CONFIG_PATH)
@@ -36,6 +37,7 @@ print(config.float)
 print(config.complex)
 print(config.int)
 print(config.boolean)
+print(config.none)
 
 config.list = [1, 2, 3, 4]
 config.tuple = ("1", "2", "3")
@@ -46,6 +48,7 @@ config.float = 10.0
 config.complex = (2+2j)
 config.int = 43
 config.boolean = True
+config.none = None
 
 try:
 	config.list = [1, 2, 3, [lambda x: True]]
