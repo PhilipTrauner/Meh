@@ -2,6 +2,8 @@ from imp import load_source
 from os.path import isfile
 from sys import version
 
+NoneType = type(None)
+
 class OptionDuplicateError(IndexError):
 	def __init__(self, name):
 		super(IndexError, self).__init__("'%s' already exists" % name)	
@@ -25,7 +27,7 @@ class ValidationError(Exception):
 class UnsupportedTypeError(TypeError):
 	def __init__(self):
 		super(TypeError, self).__init__("only list, tuple, dict, bytes, "
-			"str, float, complex, int and bool are supported (same " 
+			"str, float, complex, int, None, and bool are supported (same " 
 			"thing applies to list, dict and tuple contents)")	
 
 
@@ -48,7 +50,7 @@ def validate_value(value):
 				return False
 	elif type_value is dict:
 		return validate_value(tuple(value.keys())) and validate_value(tuple(value.values()))
-	elif type_value in (bytes, str, float, complex, int, bool):
+	elif type_value in (bytes, str, float, complex, int, bool, NoneType):
 		return True
 	else:
 		return False
