@@ -23,7 +23,7 @@ default values, validators and comments.
 
 setup(
 	name="Meh",
-	version="1.1",
+	version="1.2.1",
 	author="Philip Trauner",
 	author_email="philip.trauner@arztpraxis.io",
 	url="https://github.com/PhilipTrauner/Meh",
